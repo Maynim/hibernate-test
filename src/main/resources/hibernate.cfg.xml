@@ -14,6 +14,7 @@
     <property name="format_sql">true</property>
 
     <mapping class="com.maynim.entity.User"/>
+    <mapping class="com.maynim.entity.Company"/>
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->

@@ -1,7 +1,5 @@
 package com.maynim.entity;
 
-import com.maynim.converter.BirthdayConverter;
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -18,20 +16,14 @@ public class User {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = "firstname")
-    private String firstName;
-
-    @Column(name = "lastname")
-    private String lastName;
-
-    @Column(name = "birth_date")
-    @Convert(converter = BirthdayConverter.class)
-    private Birthday birthDate;
+    @Embedded
+    @AttributeOverride(name = "birthDate", column = @Column(name = "birth_date"))
+    private PersonalInfo personalInfo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
@@ -40,4 +32,8 @@ public class User {
     @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
     @Column(name = "info")
     private String info;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 }
