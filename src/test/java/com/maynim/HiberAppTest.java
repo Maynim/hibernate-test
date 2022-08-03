@@ -5,11 +5,30 @@ import com.maynim.util.HibernateTestUtil;
 import com.maynim.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
+import java.util.List;
 
 public class HiberAppTest {
+
+    @Test
+    void checkHql() {
+        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory()) {
+            try (Session session = sessionFactory.openSession()) {
+                session.beginTransaction();
+
+                String name = "Ivan";
+
+                List<User> result = session.createQuery(
+                        "SELECT u FROM User u WHERE u.personalInfo.firstName = :firstname", User.class)
+                        .setParameter("firstname", name)
+                        .list();
+
+                session.getTransaction().commit();
+            }
+        }
+    }
 
     @Test
     void checkH2() {
@@ -17,11 +36,32 @@ public class HiberAppTest {
             try (Session session = sessionFactory.openSession()) {
                 session.beginTransaction();
 
-                Company company = Company.builder()
+                Company google = Company.builder()
                         .name("Google")
                         .build();
 
-                session.save(company);
+                session.save(google);
+
+                Programmer programmer = Programmer.builder()
+                        .username("ivan@maill.ru")
+                        .language(Language.JAVA)
+                        .company(google)
+                        .build();
+                session.save(programmer);
+
+                Manager manager = Manager.builder()
+                        .username("sveta@maill.ru")
+                        .projectName("Starter")
+                        .company(google)
+                        .build();
+                session.save(manager);
+                session.flush();
+
+                session.clear();
+
+                Programmer programmer1 = session.get(Programmer.class, 1L);
+                User manager1 = session.get(User.class, 2L);
+                System.out.println();
 
                 session.getTransaction().commit();
             }
@@ -53,15 +93,16 @@ public class HiberAppTest {
 
                 Chat chat = session.get(Chat.class, 1L);
 
-                UserChat userChat = UserChat.builder()
-                        .createdAt(Instant.now())
-                        .createdBy(user.getUsername())
-                        .build();
 
-                userChat.setUser(user);
-                userChat.setChat(chat);
-
-                session.save(userChat);
+//                UserChat userChat = UserChat.builder()
+//                        .createdAt(Instant.now())
+//                        .createdBy(user.getUsername())
+//                        .build();
+//
+//                userChat.setUser(user);
+//                userChat.setChat(chat);
+//
+//                session.save(userChat);
 
                 session.getTransaction().commit();
             }

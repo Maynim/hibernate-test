@@ -6,7 +6,7 @@
   <session-factory>
     <property name="connection.url">jdbc:postgresql://localhost:5432/hiber_test</property>
     <property name="connection.username">postgres</property>
-    <property name="connection.password">postgresql</property>
+    <property name="connection.password">postgres</property>
     <property name="connection.driver_class">org.postgresql.Driver</property>
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
 
@@ -18,6 +18,8 @@
     <mapping class="com.maynim.entity.Profile"/>
     <mapping class="com.maynim.entity.Chat"/>
     <mapping class="com.maynim.entity.UserChat"/>
+    <mapping class="com.maynim.entity.Programmer"/>
+    <mapping class="com.maynim.entity.Manager"/>
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->

@@ -7,15 +7,16 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedQuery(name = "findUserByName", query = "SELECT u FROM User u WHERE u.personalInfo.firstName = :firstname")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "username")
 @ToString(exclude = {"company", "profile", "userChats"})
-@Builder
 @Entity
 @Table(name = "users")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User implements BaseEntity<Long> {
 
     @Id
     @Column(name = "id")
@@ -47,7 +48,7 @@ public class User {
     )
     private Profile profile;
 
-    @Builder.Default
+    //    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserChat> userChats = new ArrayList<>();
 

@@ -18,22 +18,23 @@ public class HiberApp {
                 .name("KFC")
                 .build();
 
-        User user = User.builder()
-                .username("Alex@m.ru")
-                .personalInfo(PersonalInfo.builder()
-                        .firstName("Alex")
-                        .lastName("Man")
-                        .build())
-                .company(company)
-                .build();
+//        User user = User.builder()
+//                .username("Alex@m.ru")
+//                .personalInfo(PersonalInfo.builder()
+//                        .firstName("Alex")
+//                        .lastName("Man")
+//                        .build())
+//                .company(company)
+//                .build();
 
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
             Session session1 = sessionFactory.openSession();
             try (session1) {
                 session1.beginTransaction();
 
-                session1.persist(company);
-                session1.persist(user);
+//                session1.save(user);
+//                session1.save(company);
+//                company.addUser(user);
 
                 session1.getTransaction().commit();
             }
