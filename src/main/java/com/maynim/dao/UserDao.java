@@ -10,6 +10,10 @@ public class UserDao {
 
     private static final UserDao INSTANCE = new UserDao();
 
+    public static UserDao getInstance() {
+        return INSTANCE;
+    }
+
     public List<User> findAll(Session session) {
         return session.createQuery("SELECT u FROM User u", User.class)
                 .list();
@@ -22,7 +26,7 @@ public class UserDao {
                 .list();
     }
 
-    public List<User> findLimitedUsersOrderByBirthday(Session session, int limit) {
+    public List<User> findLimitedUsersOrderedByBirthday(Session session, int limit) {
         return session.createQuery("SELECT u FROM User u ORDER BY u.personalInfo.birthDate", User.class)
                 .setMaxResults(limit)
                 .list();

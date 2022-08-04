@@ -18,8 +18,6 @@
     <mapping class="com.maynim.entity.Profile"/>
     <mapping class="com.maynim.entity.Chat"/>
     <mapping class="com.maynim.entity.UserChat"/>
-    <mapping class="com.maynim.entity.Programmer"/>
-    <mapping class="com.maynim.entity.Manager"/>
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->

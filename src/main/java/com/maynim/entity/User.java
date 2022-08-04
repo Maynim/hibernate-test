@@ -12,11 +12,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "username")
-@ToString(exclude = {"company", "profile", "userChats"})
+@ToString(exclude = {"company", "profile", "userChats", "payments"})
+@Builder
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User implements BaseEntity<Long> {
+public class User implements BaseEntity<Long> {
 
     @Id
     @Column(name = "id")
@@ -48,7 +48,7 @@ public abstract class User implements BaseEntity<Long> {
     )
     private Profile profile;
 
-    //    @Builder.Default
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserChat> userChats = new ArrayList<>();
 
@@ -56,5 +56,7 @@ public abstract class User implements BaseEntity<Long> {
     @OneToMany(mappedBy = "receiver")
     private List<Payment> payments = new ArrayList<>();
 
-
+    public String fullName() {
+        return getPersonalInfo().getFirstName() + " " + getPersonalInfo().getLastName();
+    }
 }
