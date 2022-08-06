@@ -29,8 +29,8 @@ public class Profile {
     @Column(name = "language")
     private String language;
 
-    public void setUser(User user){
-        user.setProfile(this);
-        this.user = user;
-    }
+//    public void setUser(User user){
+//        user.setProfile(this);
+//        this.user = user;
+//    }
 }

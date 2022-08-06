@@ -1,6 +1,7 @@
 package com.maynim.entity;
 
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = "name")
 @Builder
 @Entity
+@BatchSize(size = 3)
 public class Company {
 
     @Id
