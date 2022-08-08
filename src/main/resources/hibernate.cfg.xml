@@ -9,8 +9,9 @@
     <property name="connection.password">postgres</property>
     <property name="connection.driver_class">org.postgresql.Driver</property>
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
+<!--    <property name="hibernate.connection.isolation">8</property>-->
 
-    <property name="hibernate.hbm2ddl.auto">validate</property>
+    <property name="hibernate.hbm2ddl.auto">create</property>
 
     <property name="show_sql">true</property>
     <property name="format_sql">true</property>
@@ -22,7 +23,5 @@
     <mapping class="com.maynim.entity.UserChat"/>
     <mapping class="com.maynim.entity.Payment"/>
 
-    <!-- DB schema will be updated if needed -->
-    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
   </session-factory>
 </hibernate-configuration>

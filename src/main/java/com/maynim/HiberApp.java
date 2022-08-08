@@ -1,7 +1,7 @@
 package com.maynim;
 
 
-
+import com.maynim.entity.Payment;
 import com.maynim.entity.User;
 import com.maynim.entity.UserChat;
 import com.maynim.util.HibernateUtil;
@@ -13,40 +13,32 @@ import org.hibernate.graph.GraphSemantic;
 import org.hibernate.graph.RootGraph;
 import org.hibernate.graph.SubGraph;
 
+import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
+import javax.transaction.Transactional;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
 public class HiberApp {
 
+    @Transactional
     public static void main(String[] args) {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
             try (Session session = sessionFactory.openSession()) {
+                TestDataImporter.importData(sessionFactory);
+
                 session.beginTransaction();
 
-                RootGraph<User> userGraph = session.createEntityGraph(User.class);
-                userGraph.addAttributeNodes("company", "userChats");
-                SubGraph<UserChat> userChatsSubgraph = userGraph.addSubgraph("userChats", UserChat.class);
-                userChatsSubgraph.addAttributeNodes("chat");
+                session.createNativeQuery("SET TRANSACTION READ ONLY; ").executeUpdate();
 
-//                RootGraph<?> graph = session.getEntityGraph("WithCompanyAndChat");
-//                Map<String, Object> properties = Map.of(
-//                        GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("WithCompanyAndChat")
-//                );
-//                User user = session.find(User.class, 1L, properties);
-
-//                System.out.println(user.getCompany().getName());
-//                System.out.println(user.getUserChats().size());
-                List<User> users = session.createQuery("SELECT u FROM User u", User.class)
-                        .setHint(GraphSemantic.LOAD.getJpaHintName(), userGraph)
-                        .list();
-
-                users.forEach(it -> System.out.println(it.getCompany().getName()));
-                users.forEach(it -> System.out.println(it.getUserChats().size()));
+                Payment payment = session.find(Payment.class, 1L);
+                payment.setAmount(payment.getAmount() + 10);
 
                 session.getTransaction().commit();
             }
         }
     }
 }
+
