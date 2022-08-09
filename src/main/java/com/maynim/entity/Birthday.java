@@ -13,8 +13,6 @@ public class Birthday {
 
     LocalDate birthDate;
 
-
-
     public long getAge() {
         return ChronoUnit.YEARS.between(birthDate, LocalDate.now());
     }

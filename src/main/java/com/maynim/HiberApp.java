@@ -31,8 +31,6 @@ public class HiberApp {
 
                 session.beginTransaction();
 
-                session.createNativeQuery("SET TRANSACTION READ ONLY; ").executeUpdate();
-
                 Payment payment = session.find(Payment.class, 1L);
                 payment.setAmount(payment.getAmount() + 10);
 
