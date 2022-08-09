@@ -1,6 +1,7 @@
 package com.maynim.util;
 
 import com.maynim.entity.Audit;
+import com.maynim.interceptor.GlobalInterceptor;
 import com.maynim.listener.AuditTableListener;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.experimental.UtilityClass;
@@ -35,6 +36,7 @@ public class HibernateUtil {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(Audit.class);
         configuration.registerTypeOverride(new JsonBinaryType());
+        configuration.setInterceptor(new GlobalInterceptor());
         return configuration;
     }
 }
