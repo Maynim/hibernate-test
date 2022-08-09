@@ -1,6 +1,7 @@
 package com.maynim.util;
 
 import com.maynim.entity.Audit;
+import com.maynim.entity.Revision;
 import com.maynim.interceptor.GlobalInterceptor;
 import com.maynim.listener.AuditTableListener;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
@@ -21,7 +22,7 @@ public class HibernateUtil {
         SessionFactory sessionFactory = configuration.buildSessionFactory();
 
         SessionFactoryImpl sessionFactoryImpl = sessionFactory.unwrap(SessionFactoryImpl.class);
-        registerListeners(sessionFactoryImpl);
+//        registerListeners(sessionFactoryImpl);
         return sessionFactory;
     }
 
@@ -35,6 +36,7 @@ public class HibernateUtil {
     public static Configuration buildConfiguration() {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(Audit.class);
+        configuration.addAnnotatedClass(Revision.class);
         configuration.registerTypeOverride(new JsonBinaryType());
         configuration.setInterceptor(new GlobalInterceptor());
         return configuration;

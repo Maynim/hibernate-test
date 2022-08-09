@@ -2,6 +2,8 @@ package com.maynim.entity;
 
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.Set;
 @Builder
 @Entity
 @BatchSize(size = 3)
+@Audited
 public class Company {
 
     @Id
@@ -27,11 +30,13 @@ public class Company {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @NotAudited
     @Builder.Default
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @OrderBy("username DESC, personalInfo.lastName ASC")
     private Set<User> users = new HashSet<>();
 
+    @NotAudited
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "company_locale")
