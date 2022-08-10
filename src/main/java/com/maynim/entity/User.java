@@ -3,6 +3,10 @@ package com.maynim.entity;
 import lombok.*;
 import org.hibernate.annotations.*;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
@@ -37,6 +41,8 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "users")
+@Audited
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE,region = "Users")
 public class User implements BaseEntity<Long> {
 
     @Id
@@ -63,21 +69,17 @@ public class User implements BaseEntity<Long> {
     @JoinColumn(name = "company_id")
     private Company company;
 
-//    @OneToOne(
-//            mappedBy = "user",
-//            cascade = CascadeType.ALL,
-//            fetch = FetchType.LAZY
-//    )
-//    private Profile profile;
-
     @Builder.Default
     @OneToMany(mappedBy = "user")
+    @NotAudited
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<UserChat> userChats = new ArrayList<>();
 
     @Builder.Default
 //    @BatchSize(size = 3)
 //    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "receiver")
+    @NotAudited
     private List<Payment> payments = new ArrayList<>();
 
     public String fullName() {

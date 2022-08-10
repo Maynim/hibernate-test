@@ -3,6 +3,7 @@ package com.maynim.entity;
 
 import com.maynim.listener.UserChatListener;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -16,6 +17,7 @@ import java.util.Stack;
 @Entity
 @Table(name = "users_chat")
 @EntityListeners(UserChatListener.class)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserChat extends AuditableEntity<Long> {
 
     @Id

@@ -30,22 +30,35 @@ public class HiberApp {
     @Transactional
     public static void main(String[] args) {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
+            TestDataImporter.importData(sessionFactory);
+            User user = null;
             try (Session session = sessionFactory.openSession()) {
                 session.beginTransaction();
 
-                Payment payment = session.find(Payment.class, 1L);
-                payment.setAmount(payment.getAmount() + 10);
+                user = session.find(User.class, 1L);
+                user.getCompany().getName();
+                User user1 = session.find(User.class, 1L);
+
+                List<Payment> payment = session.createQuery("SELECT p FROM Payment p WHERE p.receiver.id = :userId", Payment.class)
+                        .setParameter("userId", 1L)
+                        .setCacheable(true)
+//                        .setCacheRegion("queries")
+                        .getResultList();
 
                 session.getTransaction().commit();
             }
-            try (Session session2 = sessionFactory.openSession()) {
-                session2.beginTransaction();
 
-                AuditReader auditReader = AuditReaderFactory.get(session2);
-                Payment oldPayment = auditReader.find(Payment.class, 1L, new Date(1660063589903L));
-                System.out.println();
+            try (Session session = sessionFactory.openSession()) {
+                session.beginTransaction();
 
-                session2.getTransaction().commit();
+                User user2 = session.find(User.class, 1L);
+                user2.getCompany().getName();
+                List<Payment> payment = session.createQuery("SELECT p FROM Payment p WHERE p.receiver.id = :userId", Payment.class)
+                        .setParameter("userId", 1L)
+                        .setCacheable(true)
+//                        .setCacheRegion("queries")
+                        .getResultList();
+                session.getTransaction().commit();
             }
         }
     }

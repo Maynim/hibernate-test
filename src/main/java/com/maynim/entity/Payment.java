@@ -1,6 +1,7 @@
 package com.maynim.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OptimisticLockType;
 import org.hibernate.annotations.OptimisticLocking;
@@ -19,6 +20,8 @@ import java.time.Instant;
 //@OptimisticLocking(type = OptimisticLockType.ALL)
 //@DynamicUpdate
 @Audited
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class Payment extends AuditableEntity<Long> {
 
     @Id
