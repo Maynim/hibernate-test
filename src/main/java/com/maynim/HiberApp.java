@@ -1,6 +1,7 @@
 package com.maynim;
 
 
+import com.maynim.dao.PaymentRepository;
 import com.maynim.entity.Payment;
 import com.maynim.entity.User;
 import com.maynim.entity.UserChat;
@@ -18,6 +19,9 @@ import org.hibernate.graph.SubGraph;
 import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
 import javax.transaction.Transactional;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.sql.SQLOutput;
 import java.util.Date;
 import java.util.List;
@@ -30,37 +34,17 @@ public class HiberApp {
     @Transactional
     public static void main(String[] args) {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
-            TestDataImporter.importData(sessionFactory);
-            User user = null;
-            try (Session session = sessionFactory.openSession()) {
-                session.beginTransaction();
 
-                user = session.find(User.class, 1L);
-                user.getCompany().getName();
-                User user1 = session.find(User.class, 1L);
+            Session session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
+                    (proxy, method, args1) -> method.invoke(sessionFactory.getCurrentSession(), args1));
+            session.beginTransaction();
 
-                List<Payment> payment = session.createQuery("SELECT p FROM Payment p WHERE p.receiver.id = :userId", Payment.class)
-                        .setParameter("userId", 1L)
-                        .setCacheable(true)
-//                        .setCacheRegion("queries")
-                        .getResultList();
+            PaymentRepository paymentRepository = new PaymentRepository(session);
 
-                session.getTransaction().commit();
-            }
-
-            try (Session session = sessionFactory.openSession()) {
-                session.beginTransaction();
-
-                User user2 = session.find(User.class, 1L);
-                user2.getCompany().getName();
-                List<Payment> payment = session.createQuery("SELECT p FROM Payment p WHERE p.receiver.id = :userId", Payment.class)
-                        .setParameter("userId", 1L)
-                        .setCacheable(true)
-//                        .setCacheRegion("queries")
-                        .getResultList();
-                session.getTransaction().commit();
-            }
+            paymentRepository.findById(1L).ifPresent(System.out::println);
+            session.getTransaction().commit();
         }
+
     }
 }
 
